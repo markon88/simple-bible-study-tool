@@ -1,0 +1,32 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "https://json.schemastore.org/wrangler.json",
+	"name": "simple-bible-study-tool",
+	"main": "src/index.ts",
+	"account_id": "8202d9a7479726eff05d9211e9ffa53e",
+	"compatibility_date": "2026-06-18",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": {
+		"enabled": true
+	},
+	"assets": {
+		"directory": "./public",
+		"binding": "ASSETS"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "simple-bible-study-tool",
+			"database_id": "b6909c29-938c-4cf0-ad40-dab4250c3079",
+			"migrations_dir": "migrations"
+		}
+	],
+	"vars": {
+		"ENVIRONMENT": "production"
+	}
+	// Secrets (set via: wrangler secret put <NAME>)
+	// JWT_SECRET
+}

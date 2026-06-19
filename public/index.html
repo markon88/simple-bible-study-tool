@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bible Study Tool</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header id="toolbar">
+    <div class="toolbar-group">
+      <div class="book-picker">
+        <button id="book-picker-btn" type="button">Genesis &#9662;</button>
+        <div id="book-picker-panel" class="book-picker-panel" hidden>
+          <div class="book-picker-col">
+            <h5>Old Testament</h5>
+            <div id="ot-books"></div>
+          </div>
+          <div class="book-picker-col">
+            <h5>New Testament</h5>
+            <div id="nt-books"></div>
+          </div>
+        </div>
+      </div>
+      <select id="chapter-select" aria-label="Chapter"></select>
+      <select id="verse-select" aria-label="Verse"></select>
+      <button id="prev-chapter" title="Previous chapter">&larr;</button>
+      <button id="next-chapter" title="Next chapter">&rarr;</button>
+    </div>
+    <form id="search-form" class="toolbar-group">
+      <input id="search-input" type="text" placeholder="Search text or reference (e.g. John 3:16, Jn3:16, 1Jn1:9)" autocomplete="off">
+    </form>
+    <div class="toolbar-group">
+      <button id="word-search-btn">Word search</button>
+      <a href="/journal.html">Journal</a>
+      <a href="/settings.html">Settings</a>
+      <a href="/tutorial.html">Help</a>
+      <button id="logout-btn">Log out</button>
+    </div>
+  </header>
+
+  <div id="search-results" hidden></div>
+
+  <div id="reader-split">
+    <div id="column-headers">
+      <button id="collapse-bible" class="edge-toggle left-edge" title="Collapse/expand Bible text">&laquo;</button>
+      <div class="col-header-cell left-header">
+        <span class="header-label">Bible</span>
+        <select id="translation-select" aria-label="Translation">
+          <option value="KJV">KJV</option>
+        </select>
+      </div>
+      <div class="col-header-cell right-header">Notes</div>
+      <button id="collapse-notes" class="edge-toggle right-edge" title="Collapse/expand notes">&raquo;</button>
+    </div>
+    <div id="verse-list"></div>
+    <div id="divider"></div>
+  </div>
+
+  <div id="bold-btn-wrapper">
+    <button id="bold-btn" hidden type="button"><strong>B</strong></button>
+  </div>
+
+  <div id="word-search-modal" hidden class="modal">
+    <div class="modal-content">
+      <button id="word-search-close" class="modal-close">&times;</button>
+      <h3>Word search</h3>
+      <p class="hint">This only searches words you've <strong>bolded in your own notes</strong> — it does not search the Bible text itself. Looking for a Bible verse instead? Close this and use the search bar in the toolbar.</p>
+      <p class="hint">Results filter as you type.</p>
+      <form id="word-search-form">
+        <input id="word-search-input" type="text" placeholder="word" autocomplete="off">
+      </form>
+      <div id="word-search-results"></div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

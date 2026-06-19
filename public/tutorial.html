@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help — Bible Study Tool</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+  .demo-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--card-bg);
+  }
+  .demo-row .bible-cell, .demo-row .notes-cell { padding: 0; cursor: default; }
+  .demo-row .note-input { pointer-events: none; }
+  .feature-block { margin-bottom: 2rem; }
+  .feature-block h2 { font-size: 1.05rem; color: var(--primary); margin-bottom: 0.3rem; }
+  .feature-block p { margin: 0.3rem 0; color: var(--text); }
+  kbd {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    font-family: inherit;
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+  <main class="page" style="max-width: 820px;">
+    <a class="back" href="/">&larr; Back to reading</a>
+    <h1>How to use this tool</h1>
+    <p class="hint">A quick tour of every feature, with a small demo for each.</p>
+
+    <div class="feature-block">
+      <h2>Reading and noting side by side</h2>
+      <p>Bible text is on the left, your notes are on the right, lined up verse by verse. If your note runs longer than the verse, that row simply grows — the next verse always starts right after, on both sides.</p>
+      <div class="demo-row">
+        <div class="bible-cell"><span class="verse-num">16</span> For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.</div>
+        <div class="notes-cell">
+          <span class="verse-num">16</span>
+          <div class="note-input" contenteditable="false">The most-quoted verse in the Bible — the whole gospel in one sentence.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-block">
+      <h2>Starting a note</h2>
+      <p>Click the verse number on either side, or click anywhere in the notes column lined up with that verse — even in the empty space below a short note — and you'll be typing in that verse's note.</p>
+    </div>
+
+    <div class="feature-block">
+      <h2>Bold text</h2>
+      <p>Select text in a note and press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd>+<kbd>B</kbd>, or use the floating <strong>B</strong> button that appears above the note you're editing. Bold toggles on and off the same way.</p>
+      <p>Bold isn't just for emphasis here — it's how the app knows you're commenting on a specific <em>word</em>, not just leaving a general note on the verse. Anything you bold in a note becomes searchable through Word search (below), so bolding a word is really tagging it: "I have something to say about this particular word, wherever it shows up." Plain, unbolded text in a note is just a general comment and isn't indexed that way.</p>
+    </div>
+
+    <div class="feature-block">
+      <h2>Comment on a single word</h2>
+      <p>Double-click any word in the Bible text. It's added to that verse's note in bold, with a dash after it, and your cursor jumps there so you can type the comment right away:</p>
+      <div class="demo-row">
+        <div class="bible-cell"><span class="verse-num">16</span> For God so loved the <u>world</u>, that he gave his only begotten Son...</div>
+        <div class="notes-cell">
+          <span class="verse-num">16</span>
+          <div class="note-input" contenteditable="false"><strong>world</strong> - means all of humanity, not just one nation</div>
+        </div>
+      </div>
+      <p>If you double-click a different word in the same verse, it's slotted in based on where that word actually appears in the text — not just tacked on at the end. And if you already have a general note (no bolded word) on that verse, word comments are added after it.</p>
+    </div>
+
+    <div class="feature-block">
+      <h2>Word search</h2>
+      <p>Click <strong>Word search</strong> in the toolbar and type a word — it finds every verse where you've <em>bolded</em> that exact word in a note, anywhere in the Bible, so you can see everywhere you've thought about it before.</p>
+      <p>Shortcut: double-click any bolded word inside a note (not the Bible text — the note itself) and Word search opens already filled in and searched for that word.</p>
+    </div>
+
+    <div class="feature-block">
+      <h2>Finding a verse</h2>
+      <p>The search box accepts a reference in almost any shorthand: <code>John 3:16</code>, <code>Jn3:16</code>, <code>Joh 3:16</code>, <code>1Jn1:9</code>, <code>1 Jn 1:9</code>, <code>1 Joh 1:9</code>, and <code>1 John 1:9</code> all land on the same verse. Type plain words instead and it searches both the Bible text and your notes.</p>
+      <p>The book button at top-left opens a two-column picker — Old Testament on the left, New Testament on the right — for fast jumping. The chapter and verse dropdowns next to it work the same way.</p>
+    </div>
+
+    <div class="feature-block">
+      <h2>Adjusting the layout</h2>
+      <p>Drag the thin vertical line between the two columns to resize them. Use the arrow buttons at the far left and right edges of the header bar to fully collapse either side — useful when you want to focus on just reading or just writing. Your split position and any collapsed panel are remembered the next time you open the app.</p>
+    </div>
+
+    <div class="feature-block">
+      <h2>Journal</h2>
+      <p>The <strong>Journal</strong> page lists what you've read or noted, grouped by day, so you can see your study pattern over time. Click any entry to jump straight back to it.</p>
+    </div>
+
+    <div class="feature-block">
+      <h2>Picking up where you left off</h2>
+      <p>There's nothing to save or bookmark — the app always reopens to the last book, chapter, and verse you were reading or noting on, automatically.</p>
+    </div>
+
+    <div class="feature-block">
+      <h2>Book abbreviations</h2>
+      <p>The <strong>Settings</strong> page lists every abbreviation the search box recognizes for each book, and lets you add or remove your own — so if you prefer typing a reference a certain way, you can teach the search box to understand it.</p>
+    </div>
+  </main>
+</body>
+</html>

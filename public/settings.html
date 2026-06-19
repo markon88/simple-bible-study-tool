@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Bible Study Tool</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="page">
+    <a class="back" href="/">&larr; Back to reading</a>
+
+    <h1>Account</h1>
+    <p class="hint">Logged in as <strong id="current-username">...</strong></p>
+    <form id="change-password-form">
+      <input id="current-password" type="password" placeholder="Current password" autocomplete="current-password" required>
+      <input id="new-password" type="password" placeholder="New password (min. 8 characters)" autocomplete="new-password" required>
+      <button type="submit">Change password</button>
+    </form>
+    <p id="password-error" class="error" hidden></p>
+    <p id="password-success" class="hint" hidden>Password changed.</p>
+
+    <h1>Book abbreviations</h1>
+    <p class="hint">These control what the search box accepts as a reference (e.g. "Jn 3:16" or "1Jn1:9"). Add or remove entries below.</p>
+
+    <form id="add-abbrev-form">
+      <input id="add-book" type="text" placeholder="Book (e.g. 1 John)" required>
+      <input id="add-abbrev" type="text" placeholder="Abbreviation (e.g. 1jn)" required>
+      <button type="submit">Add</button>
+    </form>
+    <p id="add-error" class="error" hidden></p>
+
+    <div id="abbrev-list"></div>
+  </main>
+  <script>
+    async function api(path, opts) {
+      const res = await fetch(path, { ...opts, headers: { 'Content-Type': 'application/json', ...(opts && opts.headers) } });
+      if (res.status === 401) { window.location.href = '/login.html'; throw new Error('unauthorized'); }
+      return res;
+    }
+
+    async function load() {
+      const res = await api('/api/abbreviations');
+      const { abbreviations } = await res.json();
+      const byBook = new Map();
+      for (const a of abbreviations) {
+        if (!byBook.has(a.book)) byBook.set(a.book, []);
+        byBook.get(a.book).push(a);
+      }
+      const list = document.getElementById('abbrev-list');
+      list.innerHTML = [...byBook.entries()].map(([book, entries]) => `
+        <div class="abbrev-row">
+          <span class="book-name">${book}</span>
+          <span class="abbrev-list">${entries.map((e) => `${e.abbrev} <button data-id="${e.id}">&times;</button>`).join(' &middot; ')}</span>
+        </div>`).join('');
+
+      list.querySelectorAll('button[data-id]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          await api(`/api/abbreviations/${btn.dataset.id}`, { method: 'DELETE' });
+          load();
+        });
+      });
+    }
+
+    async function loadMe() {
+      const res = await api('/api/me');
+      const { username } = await res.json();
+      document.getElementById('current-username').textContent = username;
+    }
+
+    document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const errorEl = document.getElementById('password-error');
+      const successEl = document.getElementById('password-success');
+      errorEl.hidden = true;
+      successEl.hidden = true;
+      const res = await api('/api/account/password', {
+        method: 'POST',
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      if (res.ok) {
+        document.getElementById('change-password-form').reset();
+        successEl.hidden = false;
+      } else {
+        const data = await res.json().catch(() => ({}));
+        errorEl.textContent = data.error || 'Could not change password';
+        errorEl.hidden = false;
+      }
+    });
+
+    document.getElementById('add-abbrev-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const book = document.getElementById('add-book').value.trim();
+      const abbrev = document.getElementById('add-abbrev').value.trim();
+      const errorEl = document.getElementById('add-error');
+      errorEl.hidden = true;
+      const res = await api('/api/abbreviations', { method: 'POST', body: JSON.stringify({ book, abbrev }) });
+      if (res.ok) {
+        document.getElementById('add-book').value = '';
+        document.getElementById('add-abbrev').value = '';
+        load();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        errorEl.textContent = data.error || 'Could not add';
+        errorEl.hidden = false;
+      }
+    });
+
+    loadMe();
+    load();
+  </script>
+</body>
+</html>

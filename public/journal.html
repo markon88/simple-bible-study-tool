@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal — Bible Study Tool</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="page">
+    <a class="back" href="/">&larr; Back to reading</a>
+    <h1>Journal</h1>
+    <p class="hint">What you've read or noted recently, by day.</p>
+    <div id="journal-list"></div>
+  </main>
+  <script>
+    async function api(path) {
+      const res = await fetch(path, { headers: { 'Content-Type': 'application/json' } });
+      if (res.status === 401) { window.location.href = '/login.html'; throw new Error('unauthorized'); }
+      return res;
+    }
+
+    function formatDay(day) {
+      const d = new Date(day + 'T00:00:00');
+      return d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+    }
+
+    function dedupe(entries) {
+      const seen = new Set();
+      const out = [];
+      for (const e of entries) {
+        const key = e.action === 'note' ? `note:${e.book}:${e.chapter}:${e.verse}` : `view:${e.book}:${e.chapter}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(e);
+      }
+      return out;
+    }
+
+    async function load() {
+      const res = await api('/api/journal?days=30');
+      const { days } = await res.json();
+      const list = document.getElementById('journal-list');
+      if (!days.length) {
+        list.innerHTML = '<p class="hint">No activity yet.</p>';
+        return;
+      }
+      list.innerHTML = days.map(({ day, entries }) => {
+        const items = dedupe(entries).map((e) => {
+          const label = e.action === 'note'
+            ? `${e.book} ${e.chapter}:${e.verse} (note)`
+            : `${e.book} ${e.chapter} (read)`;
+          return `<button class="journal-entry" data-book="${e.book}" data-chapter="${e.chapter}" data-verse="${e.verse || ''}">${label}</button>`;
+        }).join('');
+        return `<div class="journal-day"><h3>${formatDay(day)}</h3>${items}</div>`;
+      }).join('');
+
+      list.querySelectorAll('.journal-entry').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const verse = btn.dataset.verse ? `&verse=${btn.dataset.verse}` : '';
+          window.location.href = `/?book=${encodeURIComponent(btn.dataset.book)}&chapter=${btn.dataset.chapter}${verse}`;
+        });
+      });
+    }
+
+    load();
+  </script>
+</body>
+</html>

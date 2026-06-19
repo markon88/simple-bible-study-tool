@@ -1,0 +1,14 @@
+node_modules/
+.wrangler/
+worker-configuration.d.ts
+*.log
+.DS_Store
+.env
+.env.*
+
+# Electron build output
+electron/node_modules/
+electron/dist/
+dist/
+out/
+release/
