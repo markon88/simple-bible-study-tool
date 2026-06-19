@@ -25,8 +25,10 @@
 		}
 	],
 	"vars": {
-		"ENVIRONMENT": "production"
+		"ENVIRONMENT": "production",
+		"APP_URL": "https://simple-bible-study-tool.apptool.workers.dev"
 	}
 	// Secrets (set via: wrangler secret put <NAME>)
 	// JWT_SECRET
+	// RESEND_API_KEY
 }

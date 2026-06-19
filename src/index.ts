@@ -1,5 +1,14 @@
 import type { Env } from './types';
-import { handleLogin, handleLogout, handleChangePassword, requireAuth } from './auth';
+import {
+  handleLogin,
+  handleLogout,
+  handleChangePassword,
+  handleSignup,
+  handleVerifyEmail,
+  handleForgotPassword,
+  handleResetPassword,
+  requireAuth,
+} from './auth';
 import { handleGetChapterNotes, handleSaveNote, handleSearchNotes, handleWordSearch } from './notes';
 import {
   handleListAbbreviations,
@@ -25,6 +34,10 @@ export default {
     // ── Auth ─────────────────────────────────────────────────────────────
     if (path === '/auth/login' && method === 'POST') return handleLogin(request, env);
     if (path === '/auth/logout' && method === 'POST') return handleLogout(request);
+    if (path === '/auth/signup' && method === 'POST') return handleSignup(request, env);
+    if (path === '/auth/verify-email' && method === 'POST') return handleVerifyEmail(request, env);
+    if (path === '/auth/forgot-password' && method === 'POST') return handleForgotPassword(request, env);
+    if (path === '/auth/reset-password' && method === 'POST') return handleResetPassword(request, env);
 
     // ── Everything under /api requires auth ─────────────────────────────
     if (path.startsWith('/api/')) {

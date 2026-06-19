@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create account — Bible Study Tool</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <h1>Create your account</h1>
+    <form id="signup-form">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="email" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+      <button type="submit">Sign up</button>
+      <p id="signup-error" class="error" hidden></p>
+    </form>
+    <p id="signup-success" class="hint" hidden>Check your email for a verification link to finish signing in.</p>
+    <p class="auth-links"><a href="/login.html">Back to sign in</a></p>
+  </main>
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorEl = document.getElementById('signup-error');
+      errorEl.hidden = true;
+      const res = await fetch('/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
+      if (res.ok) {
+        document.getElementById('signup-form').hidden = true;
+        document.getElementById('signup-success').hidden = false;
+      } else {
+        const data = await res.json().catch(() => ({}));
+        errorEl.textContent = data.error || 'Sign up failed';
+        errorEl.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>

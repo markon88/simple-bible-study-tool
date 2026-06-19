@@ -17,6 +17,9 @@
       <button type="submit">Sign in</button>
       <p id="login-error" class="error" hidden></p>
     </form>
+    <p class="auth-links">
+      <a href="/signup.html">Create an account</a> &middot; <a href="/forgot-password.html">Forgot password?</a>
+    </p>
   </main>
   <script>
     document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -34,7 +37,9 @@
         window.location.href = '/';
       } else {
         const data = await res.json().catch(() => ({}));
-        errorEl.textContent = data.error || 'Sign in failed';
+        errorEl.textContent = data.unverified
+          ? 'Please verify your email before signing in — check your inbox for the link.'
+          : (data.error || 'Sign in failed');
         errorEl.hidden = false;
       }
     });

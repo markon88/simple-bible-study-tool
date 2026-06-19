@@ -82,7 +82,11 @@
       });
       if (res.ok) {
         document.getElementById('change-password-form').reset();
+        successEl.textContent = 'Password changed — please log in again.';
         successEl.hidden = false;
+        // Changing the password invalidates the current session too (so it's
+        // logged out everywhere consistently, not just on other devices).
+        setTimeout(() => { window.location.href = '/login.html'; }, 1500);
       } else {
         const data = await res.json().catch(() => ({}));
         errorEl.textContent = data.error || 'Could not change password';

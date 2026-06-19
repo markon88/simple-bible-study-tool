@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify email — Bible Study Tool</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <h1>Verifying your email…</h1>
+    <p id="status" class="hint">One moment.</p>
+    <p class="auth-links"><a href="/login.html">Back to sign in</a></p>
+  </main>
+  <script>
+    (async () => {
+      const statusEl = document.getElementById('status');
+      const token = new URLSearchParams(window.location.search).get('token');
+      if (!token) {
+        statusEl.textContent = 'Missing verification token.';
+        return;
+      }
+      const res = await fetch('/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+      if (res.ok) {
+        statusEl.textContent = 'Email verified — taking you in…';
+        window.location.href = '/';
+      } else {
+        const data = await res.json().catch(() => ({}));
+        statusEl.textContent = data.error || 'This verification link is invalid or has expired.';
+      }
+    })();
+  </script>
+</body>
+</html>

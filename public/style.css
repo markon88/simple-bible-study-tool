@@ -58,6 +58,10 @@ body.login-page {
 }
 .login-card button:hover { background: var(--primary-dark); }
 .login-card .error { color: var(--primary-dark); font-size: 0.85rem; margin-top: 0.6rem; }
+.login-card .auth-links { text-align: center; font-size: 0.85rem; margin-top: 1rem; color: var(--muted); }
+.login-card .auth-links a { color: var(--primary); text-decoration: none; }
+.login-card .auth-links a:hover { text-decoration: underline; }
+.login-card .hint { font-size: 0.85rem; color: var(--muted); margin-top: 0.6rem; }
 
 /* ── Toolbar ─────────────────────────────────────────────────────────── */
 #toolbar {
