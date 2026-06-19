@@ -1,0 +1,56 @@
+{
+  "name": "bible-study-tool-electron",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/electron/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && cp preload.js dist/electron/preload.js",
+    "dev": "tsx watch main.ts",
+    "start": "npm run build && electron .",
+    "package": "npm run build && electron-builder --publish never",
+    "release": "npm run build && electron-builder --publish always"
+  },
+  "build": {
+    "appId": "app.churchtree.biblestudytool",
+    "productName": "Bible Study Tool",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "preload.js"
+    ],
+    "extraResources": [
+      {
+        "from": "../public",
+        "to": "public"
+      },
+      {
+        "from": "../migrations",
+        "to": "migrations"
+      }
+    ],
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.education"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "markon88",
+      "repo": "simple-bible-study-tool"
+    }
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "electron-updater": "^6.3.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240903.0",
+    "@electron/rebuild": "^4.0.4",
+    "@types/node": "^22.0.0",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.2"
+  }
+}

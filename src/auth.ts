@@ -1,6 +1,7 @@
 import type { AuthToken, Env, User } from './types';
 import { signJWT, verifyJWT, getSessionToken, sessionCookie, clearSessionCookie } from './jwt';
 import { sendEmail, verifyEmailHtml, resetPasswordHtml } from './email';
+import { defaultAbbreviations } from './default-abbreviations';
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -122,6 +123,15 @@ export async function handleSignup(request: Request, env: Env): Promise<Response
   await env.DB.prepare(
     'INSERT INTO users (id, username, email, email_verified, password_hash, created_at) VALUES (?, ?, ?, 0, ?, ?)'
   ).bind(userId, username, email, hash, now).run();
+
+  // Seed default book abbreviations so reference search works immediately,
+  // before the user has had a chance to personalize it via Settings.
+  // Batched into one round-trip rather than ~200 sequential inserts.
+  const seedStmt = env.DB.prepare('INSERT INTO book_abbreviations (id, user_id, book, abbrev) VALUES (?, ?, ?, ?)');
+  const seedStatements = Object.entries(defaultAbbreviations).flatMap(([book, abbrevs]) =>
+    abbrevs.map((abbrev) => seedStmt.bind(crypto.randomUUID(), userId, book, abbrev))
+  );
+  await env.DB.batch(seedStatements);
 
   const token = generateToken();
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();

@@ -772,10 +772,26 @@ function syncToolbarHeight() {
   document.documentElement.style.setProperty('--toolbar-height', `${height}px`);
 }
 
+// Only meaningful inside the Electron app — the web version has no
+// separate "install" step, the browser always serves the latest deploy.
+function wireElectronUpdateBanner() {
+  if (!window.__ELECTRON__ || !window.electronAPI) return;
+  window.electronAPI.onUpdateAvailable((version) => {
+    const banner = document.createElement('div');
+    banner.id = 'update-banner';
+    banner.innerHTML = `Update ${version} downloaded. <button id="update-restart-btn">Restart now</button>`;
+    document.body.appendChild(banner);
+    document.getElementById('update-restart-btn').addEventListener('click', () => {
+      window.electronAPI.quitAndInstallUpdate();
+    });
+  });
+}
+
 async function init() {
   loadPrefs();
   syncToolbarHeight();
   window.addEventListener('resize', syncToolbarHeight);
+  wireElectronUpdateBanner();
   wireSplitControls();
   wireBookPicker();
   wireSearch();

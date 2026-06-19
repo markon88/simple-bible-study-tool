@@ -392,3 +392,26 @@ body.login-page {
 #change-password-form { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
 #change-password-form input { padding: 0.4rem; border: 1px solid var(--border); border-radius: 6px; background: var(--cream); color: var(--text); font-size: 1rem; }
 .page .error { color: var(--primary-dark); font-size: 0.85rem; }
+
+#update-banner {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 50;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  color: var(--white);
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(26,17,8,0.25);
+  font-size: 0.9rem;
+}
+#update-banner button {
+  margin-left: 0.6rem;
+  background: var(--white);
+  color: var(--primary-dark);
+  border: none;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-weight: 700;
+  cursor: pointer;
+}
