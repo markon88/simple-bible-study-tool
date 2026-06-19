@@ -52,6 +52,7 @@ export interface BookAbbreviation {
   user_id: string;
   book: string;
   abbrev: string;
+  updated_at: string;
 }
 
 export type ActivityAction = 'view' | 'note';

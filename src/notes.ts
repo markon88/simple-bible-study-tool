@@ -22,6 +22,21 @@ function extractBoldSpans(content: string): string[] {
   return [...words];
 }
 
+// Shared by handleSaveNote and the sync push handler — both need to keep
+// word_tags consistent with a note's content after writing it.
+export async function regenerateWordTags(
+  env: Env, noteId: string, userId: string, book: string, chapter: number, verse: number, content: string
+): Promise<void> {
+  await env.DB.prepare('DELETE FROM word_tags WHERE note_id = ?').bind(noteId).run();
+  const words = extractBoldSpans(content);
+  const now = new Date().toISOString();
+  for (const word of words) {
+    await env.DB.prepare(
+      'INSERT INTO word_tags (id, note_id, user_id, book, chapter, verse, word_normalized, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+    ).bind(crypto.randomUUID(), noteId, userId, book, chapter, verse, word, now).run();
+  }
+}
+
 export async function handleGetChapterNotes(env: Env, userId: string, book: string, chapter: number): Promise<Response> {
   const { results } = await env.DB.prepare(
     'SELECT verse, content FROM notes WHERE user_id = ? AND book = ? AND chapter = ?'

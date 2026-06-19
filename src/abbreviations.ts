@@ -58,8 +58,8 @@ export async function handleAddAbbreviation(request: Request, env: Env, userId: 
 
   try {
     await env.DB.prepare(
-      'INSERT INTO book_abbreviations (id, user_id, book, abbrev) VALUES (?, ?, ?, ?)'
-    ).bind(crypto.randomUUID(), userId, book, abbrev).run();
+      'INSERT INTO book_abbreviations (id, user_id, book, abbrev, updated_at) VALUES (?, ?, ?, ?, ?)'
+    ).bind(crypto.randomUUID(), userId, book, abbrev, new Date().toISOString()).run();
   } catch {
     return json({ error: 'Abbreviation already in use' }, 409);
   }

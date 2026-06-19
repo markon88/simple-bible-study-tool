@@ -127,9 +127,9 @@ export async function handleSignup(request: Request, env: Env): Promise<Response
   // Seed default book abbreviations so reference search works immediately,
   // before the user has had a chance to personalize it via Settings.
   // Batched into one round-trip rather than ~200 sequential inserts.
-  const seedStmt = env.DB.prepare('INSERT INTO book_abbreviations (id, user_id, book, abbrev) VALUES (?, ?, ?, ?)');
+  const seedStmt = env.DB.prepare('INSERT INTO book_abbreviations (id, user_id, book, abbrev, updated_at) VALUES (?, ?, ?, ?, ?)');
   const seedStatements = Object.entries(defaultAbbreviations).flatMap(([book, abbrevs]) =>
-    abbrevs.map((abbrev) => seedStmt.bind(crypto.randomUUID(), userId, book, abbrev))
+    abbrevs.map((abbrev) => seedStmt.bind(crypto.randomUUID(), userId, book, abbrev, now))
   );
   await env.DB.batch(seedStatements);
 
